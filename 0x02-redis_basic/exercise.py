@@ -15,7 +15,7 @@ class Cache:
     def store(self, data: str | bytes | int | float) -> str:
         """method that Creates a key and store data"""
         key = str(uuid.uuid1())
-        self_redis.mset({key: data})
+        self._redis.mset({key: data})
         return key
 
 
