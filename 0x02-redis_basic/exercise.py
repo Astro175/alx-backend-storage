@@ -7,10 +7,10 @@ import uuid
 
 class Cache:
     """Class that stores data in a redis key"""
-    def __init__(self):
+    def __init__(self) -> None:
         """Creates a redis instance"""
         self._redis = redis.Redis()
-        self._redis.flushdb()
+        (self._redis).flushdb()
 
     def store(self, data: str | bytes | int | float) -> str:
         """method that Creates a key and store data"""
