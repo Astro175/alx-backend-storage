@@ -5,7 +5,30 @@
 import redis
 import uuid
 from typing import Union, Callable, Optional
+import functools
 
+def count_calls(method: Callable) -> Callable:
+    """
+    a system to count how many
+    times methods of the Cache class are called.
+    :param method:
+    :return:
+    """
+    key = method.__qualname__
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """
+        Wrap
+        :param self:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+
+    return wrapper
 
 class Cache:
     """Class that stores data in a redis key"""
@@ -14,6 +37,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[int, str, bytes, float]) -> str:
         """method that Creates a key and store data"""
         key = str(uuid.uuid1())
